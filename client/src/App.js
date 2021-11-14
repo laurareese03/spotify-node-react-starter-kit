@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import { getTrack } from "./functions.js";
+
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
 
@@ -9,12 +11,11 @@ class App extends Component {
     super();
     const params = this.getHashParams();
     const token = params.access_token;
-    if (token) {
-      spotifyApi.setAccessToken(token);
-    }
+
     this.state = {
       loggedIn: token ? true : false,
-      nowPlaying: { name: 'Not Checked', albumArt: '' }
+      nowPlaying: { name: 'Not Checked', albumArt: '' },
+      auth: {headers: {'Authorization': 'Bearer ' + token}}
     }
   }
   getHashParams() {
@@ -43,7 +44,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <a href='http://localhost:8888' > Login to Spotify </a>
+        {<div>
+          {getTrack('11dFghVXANMlKmJXsNCbNl', this.state.auth)}
+        </div>}
+        {!this.state.loggedIn && <a href='http://localhost:8888' > Login to Spotify </a>}
         <div>
           Now Playing: { this.state.nowPlaying.name }
         </div>
